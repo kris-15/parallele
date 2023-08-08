@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  admin:
+    image: kris06/admin:latest
+    ports:
+      - "4200:4200"
+    depends_on:
+      - rabbitmq
+    environment:
+      - rabbitmq_HOST=rabbitmq
+      - rabbitmq_PORT=5672
+      - rabbitmq_USERNAME=guest
+      - rabbitmq_PASSWORD=guest
+    volumes:
+      - admin_data:/django/data
+
+  directeur:
+    image: kris06/directeur:latest
+    ports:
+      - "4300:4300"
+    depends_on:
+      - rabbitmq
+    environment:
+      - rabbitmq_HOST=rabbitmq
+      - rabbitmq_PORT=5672
+      - rabbitmq_USERNAME=guest
+      - rabbitmq_PASSWORD=guest
+    volumes:
+      - directeur_data:/django/data
+
+  eleve:
+    image: kris06/eleve:latest
+    ports:
+      - "4400:4400"
+    depends_on:
+      - rabbitmq
+    environment:
+      - rabbitmq_HOST=rabbitmq
+      - rabbitmq_PORT=5672
+      - rabbitmq_USERNAME=guest
+      - rabbitmq_PASSWORD=guest
+    volumes:
+      - eleve_data:/django/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  admin_data:
+  directeur_data:
+  eleve_data:
+  rabbitmq_data:

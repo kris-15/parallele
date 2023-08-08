@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: C:\Users\ELIE\AppData\Local\Microsoft\WinGet\Links\kompose.exe -f docker-compose.yaml convert
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: eleve
+  name: eleve
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: eleve
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: C:\Users\ELIE\AppData\Local\Microsoft\WinGet\Links\kompose.exe -f docker-compose.yaml convert
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/config-default: "true"
+        io.kompose.service: eleve
+    spec:
+      containers:
+        - env:
+            - name: rabbitmq_HOST
+              value: rabbitmq
+            - name: rabbitmq_PASSWORD
+              value: guest
+            - name: rabbitmq_PORT
+              value: "5672"
+            - name: rabbitmq_USERNAME
+              value: guest
+          image: kris06/eleve:latest
+          name: eleve
+          ports:
+            - containerPort: 4400
+          resources: {}
+          volumeMounts:
+            - mountPath: /django/data
+              name: eleve-data
+      restartPolicy: Always
+      volumes:
+        - name: eleve-data
+          persistentVolumeClaim:
+            claimName: eleve-data
+status: {}
